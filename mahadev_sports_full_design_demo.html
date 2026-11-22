@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mahadev Sports – Demo Layout</title>
+<style>
+:root{--teal:#079fa2;--deep:#086d70;--ink:#20272a;--muted:#697477;--line:#d9e0e2}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f5;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.top{height:64px;background:var(--teal);color:#fff;display:flex;align-items:center;padding:0 15px;gap:13px}
+.menu{font-size:27px;line-height:1}.mark{font-size:30px;font-weight:900;color:#ffcf39;text-shadow:1px 1px #176b68}
+.brand{font-size:13px;font-weight:700;letter-spacing:.3px}.right{margin-left:auto;text-align:right;font-size:12px;line-height:1.6}
+.subnav{background:#0a8f92;color:#fff;padding:10px 14px;display:flex;gap:22px;overflow-x:auto;white-space:nowrap;font-size:13px;font-weight:700}
+.ticker{margin:8px 8px 6px;background:#64c8c9;color:#fff;text-align:center;padding:10px;font-size:13px;font-style:italic}
+.leaguebar{margin:0 8px 8px;display:flex;gap:5px;overflow:hidden}
+.leaguebar div{background:#087579;color:#cce9e9;padding:12px 15px;min-width:49%;font-weight:bold;font-size:13px}
+.tabs{background:var(--teal);color:white;display:flex;overflow-x:auto;white-space:nowrap}
+.tabs span{padding:15px 13px;border-right:1px solid #b7e4e4;font-size:14px;font-weight:bold}
+.sports{display:flex;background:var(--deep);color:white;overflow-x:auto}
+.sport{min-width:20%;text-align:center;padding:13px 5px 12px;font-size:12px;font-weight:bold}
+.sport .ico{font-size:24px;display:block;margin-bottom:5px}
+main{padding:8px;max-width:980px;margin:auto}
+.section-title{font-weight:bold;margin:6px 4px 8px;font-size:15px}
+.match{background:#fff;margin:0 0 9px;padding:10px 9px 0;border-bottom:1px solid #ddd}
+.matchhead{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:bold}
+.live{width:10px;height:10px;border-radius:50%;background:#27aa60;margin-left:auto;flex:none}
+.meta{font-size:12px;color:#6b7477;margin-top:4px}
+.matchinfo{display:flex;justify-content:space-around;padding:10px 0 8px;font-weight:bold}
+.matchinfo span{width:33.3%;text-align:center}
+.status{height:34px;display:grid;grid-template-columns:repeat(6,1fr);margin:0 -9px}
+.status i:nth-child(odd){background:#70b9e7}.status i:nth-child(even){background:#f39eae}
+.cards-title{font-weight:bold;margin:18px 4px 9px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}
+.card{height:125px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;color:white;font-weight:900;font-size:19px;letter-spacing:.3px;text-shadow:0 2px 4px #000;background:linear-gradient(135deg,#152b3d,#087f83)}
+.card:nth-child(2){background:linear-gradient(135deg,#365b35,#c79a39)}
+.card:nth-child(3){background:linear-gradient(135deg,#4d3025,#b76b36)}
+.card:nth-child(4){background:linear-gradient(135deg,#142d46,#8e9caa)}
+.card:nth-child(5){background:linear-gradient(135deg,#155a48,#b2a24b)}
+.card:nth-child(6){background:linear-gradient(135deg,#345d72,#d4a56a)}
+.card small{position:absolute;bottom:0;left:0;right:0;background:#087f83;padding:7px 3px;font-size:11px;text-shadow:none}
+.disclaimer{font-size:11px;color:#6a7477;text-align:center;padding:18px 8px}
+@media(min-width:650px){.cards{grid-template-columns:repeat(4,1fr)}.card{height:150px}.sport{min-width:16.66%}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="menu">☰</div><div class="mark">S</div><div class="brand">MAHADEV SPORTS</div>
+  <div class="right">SPORTS DEMO<br><b>LIVE MATCH INFO</b></div>
+</header>
+<nav class="subnav"><span>होम</span><span>मैच</span><span>परिणाम</span><span>टीमें</span><span>खेल समाचार</span><span>जानकारी</span></nav>
+<div class="ticker">Sports updates • Match information • Team news</div>
+<div class="leaguebar"><div>INDIA • MATCH CENTRE</div><div>INTERNATIONAL • MATCH CENTRE</div></div>
+<div class="tabs"><span>होम</span><span>लाइव मैच</span><span>आने वाले मैच</span><span>परिणाम</span><span>टीम रैंकिंग</span></div>
+<div class="sports">
+  <div class="sport"><span class="ico">🏏</span>क्रिकेट</div>
+  <div class="sport"><span class="ico">⚽</span>फुटबॉल</div>
+  <div class="sport"><span class="ico">🎾</span>टेनिस</div>
+  <div class="sport"><span class="ico">🏓</span>टेबल टेनिस</div>
+  <div class="sport"><span class="ico">🏑</span>हॉकी</div>
+  <div class="sport"><span class="ico">🏀</span>बास्केटबॉल</div>
+</div>
+<main>
+  <div class="section-title">आज के मैच</div>
+  <article class="match">
+    <div class="matchhead">Mumbai Indians — Kolkata Knight Riders <span class="live"></span><span>●</span></div>
+    <div class="meta">डेमो फिक्स्चर • मैच का समय आयोजक के अनुसार</div>
+    <div class="matchinfo"><span>मुंबई</span><span>बनाम</span><span>कोलकाता</span></div>
+    <div class="status"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </article>
+  <article class="match">
+    <div class="matchhead">Mumbai Indians — Chennai Super Kings <span class="live"></span><span>●</span></div>
+    <div class="meta">डेमो फिक्स्चर • मैच का समय आयोजक के अनुसार</div>
+    <div class="matchinfo"><span>मुंबई</span><span>बनाम</span><span>चेन्नई</span></div>
+    <div class="status"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </article>
+  <article class="match">
+    <div class="matchhead">North West Dragons — Lions <span class="live"></span><span>●</span></div>
+    <div class="meta">डेमो फिक्स्चर • मैच का समय आयोजक के अनुसार</div>
+    <div class="matchinfo"><span>Dragons</span><span>बनाम</span><span>Lions</span></div>
+    <div class="status"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </article>
+  <div class="cards-title">खेल और स्पोर्ट्स सेक्शन</div>
+  <div class="cards">
+    <div class="card">GOAL 2<small>फुटबॉल समाचार</small></div>
+    <div class="card">MATCH CENTRE<small>मैच अपडेट</small></div>
+    <div class="card">TEAM NEWS<small>टीम की जानकारी</small></div>
+    <div class="card">HIGHLIGHTS<small>मैच हाइलाइट्स</small></div>
+    <div class="card">CRICKET<small>क्रिकेट अपडेट</small></div>
+    <div class="card">SCORES<small>स्कोर जानकारी</small></div>
+    <div class="card">FIXTURES<small>आने वाले मैच</small></div>
+    <div class="card">RANKINGS<small>टीम रैंकिंग</small></div>
+  </div>
+  <div class="disclaimer">यह केवल HTML/CSS डिजाइन डेमो है। लाइव डेटा, लॉगिन, पैसे जमा करना, दांव या कैसीनो फीचर शामिल नहीं हैं।</div>
+</main>
+</body>
+</html>
