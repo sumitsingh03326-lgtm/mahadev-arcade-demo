@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mahadev Arcade</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0d1225;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:22px 12px;background:#192342;border-bottom:2px solid #d9ad4b}
+h1{color:#ffd36b;margin:0}
+header p{color:#d3d8e8}
+#score{margin:15px auto;background:#222e50;padding:12px;border-radius:12px;text-align:center;max-width:320px}
+main{max-width:1000px;margin:auto;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:13px}
+.card{background:#1b2544;border:1px solid #39496f;border-radius:13px;padding:15px;text-align:center}
+.art{font-size:42px;margin:8px}
+.card h3{font-size:16px;min-height:36px}
+button{background:#e9b94f;color:#171717;border:0;border-radius:8px;padding:11px 15px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+#gameBox{display:none;margin:18px 0;padding:18px;background:#1b2544;border:1px solid #d9ad4b;border-radius:14px;text-align:center}
+#gameTitle{color:#ffd36b}
+#playArea{min-height:140px;padding:12px;margin:12px 0;background:#0d142a;border-radius:10px}
+#message{min-height:25px;color:#ffe18c}
+input{padding:10px;border-radius:7px;border:0;width:100px}
+.cell{width:48px;height:48px;margin:4px;font-size:23px;padding:5px}
+.small{color:#bfc8dd;font-size:13px;line-height:1.5}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>🔱 MAHADEV ARCADE</h1>
+<p>15 Mini Games • Play • Enjoy</p>
+</header>
+
+<div id="score">आपके वर्चुअल पॉइंट: <b id="points">0</b></div>
+<main>
+<div class="grid" id="games"></div>
+
+<section id="gameBox">
+<h2 id="gameTitle"></h2>
+<div id="playArea"></div>
+<p id="message">गेम शुरू करो!</p>
+<div id="controls"></div>
+<br>
+<button onclick="closeGame()">गेम बंद करें</button>
+</section>
+
+<p class="small">यह मनोरंजन के लिए एक डेमो arcade है। पॉइंट केवल गेम के अंदर इस्तेमाल होने वाले वर्चुअल स्कोर हैं। इनका कोई रुपये का मूल्य नहीं है।</p>
+</main>
+<footer>🔱 Mahadev Arcade</footer>
+
+<script>
+const list=[
+["Dragon Tiger","🐉","dt"],
+["Sky Flyer","✈️","sky"],
+["Chicken Road","🐔","chicken"],
+["Lucky Dice","🎲","dice"],
+["Spin Wheel","🎡","spin"],
+["Car Racing","🏎️","car"],
+["Bike Racing","🏍️","bike"],
+["Flappy Flight","🐦","flappy"],
+["Subway Runner","🚇","subway"],
+["Bubble Shooter","🫧","bubble"],
+["Fruit Ninja","🍉","fruit"],
+["Memory Cards","🧠","memory"],
+["Cricket Star","🏏","cricket"],
+["Football Shoot","⚽","football"],
+["Treasure Hunt","💎","treasure"]
+];
+let points=0,current="",state={},timer=null;
+const $=id=>document.getElementById(id);
+function addPoints(n){
+ points+=n;
+ $("points").textContent=points;
+}
+function render(){
+ $("games").innerHTML=list.map(g=>
+ `<div class="card"><div class="art">${g[1]}</div>
+ <h3>${g[0]}</h3><button onclick="startGame('${g[2]}')">PLAY</button></div>`
+ ).join("");
+}
+function closeGame(){
+ clearInterval(timer);timer=null;
+ $("gameBox").style.display="none";current="";
+}
+function show(title,html,controls=""){
+ $("gameTitle").textContent=title;
+ $("playArea").innerHTML=html;
+ $("controls").innerHTML=controls;
+}
+function say(s){$("message").textContent=s}
+function startGame(id){
+ closeGame();current=id;state={};
+ $("gameBox").style.display="block";
+ $("gameBox").scrollIntoView({behavior:"smooth"});
+ const names=Object.fromEntries(list.map(g=>[g[2],g[0]]));
+ $("gameTitle").textContent=names[id];
+ say("खेल शुरू करो!");
+ games[id]();
+}
+function btn(label,fn){
+ return `<button onclick="${fn}">${label}</button>`;
+}
+const games={};
+
+// 1. Dragon Tiger: कार्ड तुलना, बिना दांव
+games.dt=()=>{
+ let a=Math.ceil(Math.random()*13),b=Math.ceil(Math.random()*13);
+ state.a=a;state.b=b;
+ show("🐉 Dragon  बनाम  🐅 Tiger",
+ `<h2>Dragon: ?</h2><h2>Tiger: ?</h2><p>कौन सा कार्ड बड़ा होगा?</p>`,
+ btn("Dragon चुनो","chooseDT('a')")+btn("Tiger चुनो","chooseDT('b')"));
+};
+function chooseDT(c){
+ let a=state.a,b=state.b;
+ show("कार्ड खुल गए",`<h1>🐉 ${a} &nbsp; | &nbsp; 🐅 ${b}</h1>`);
+ if(a===b)say("बराबरी! फिर से खेलो।");
+ else if((a>b&&c==="a")||(b>a&&c==="b")){addPoints(5);say("सही जवाब! +5 पॉइंट");}
+ else say("इस बार सही नहीं हुआ।");
+}
+
+// 2. Sky Flyer: ऊपर-नीचे उड़कर सितारे पकड़ो
+games.sky=()=>{
+ state.y=1;state.star=Math.floor(Math.random()*3);
+ show("✈️ सितारा पकड़ो",`<h1 id="plane">✈️</h1><h2>⭐ सितारा लेन ${state.star+1}</h2>`,
+ [0,1,2].map((x)=>btn("लेन "+(x+1),`skyMove(${x})`)).join(""));
+};
+function skyMove(x){
+ if(x===state.star){addPoints(3);say("सितारा मिल गया! +3 पॉइंट");}
+ else say("सितारा नहीं मिला, फिर कोशिश करो!");
+ state.star=Math.floor(Math.random()*3);
+ $("playArea").innerHTML=`<h1>✈️</h1><h2>⭐ सितारा लेन ${state.star+1}</h2>`;
+}
+
+// 3. Chicken Road
+games.chicken=()=>{
+ state.step=0;
+ show("🐔 सड़क पार करो",`<h1 id="chick">🐔</h1><p>सुरक्षित रास्ते से आगे बढ़ो।</p>`,
+ btn("आगे बढ़ो","chickenStep()")+btn("फिर शुरू","startGame('chicken')"));
+};
+function chickenStep(){
+ state.step++;
+ if(Math.random()<.25){say("सड़क पर गाड़ी आ गई! राउंड खत्म। कदम: "+(state.step-1));return;}
+ addPoints(2);
+ $("playArea").innerHTML=`<h1>🐔</h1><h2>कदम: ${state.step}</h2>`;
+ say("+2 पॉइंट! आगे बढ़ सकते हो।");
+}
+
+// 4. Lucky Dice
+games.dice=()=>{
+ show("🎲 पासा फेंको","<h1 id='die'>🎲</h1>",btn("पासा फेंको","rollDice()"));
+};
+function rollDice(){
+ let n=1+Math.floor(Math.random()*6);
+ $("playArea").innerHTML=`<h1>${["","⚀","⚁","⚂","⚃","⚄","⚅"][n]}</h1><h2>${n}</h2>`;
+ addPoints(n);say("आपको "+n+" पॉइंट मिले!");
+}
+
+// 5. Spin Wheel
+games.spin=()=>{
+ show("🎡 घूमता पहिया","<h1>🎡</h1>",btn("घुमाओ","spinWheel()"));
+};
+function spinWheel(){
+ let n=[1,2,3,4,5,10][Math.floor(Math.random()*6)];
+ addPoints(n);
+ $("playArea").innerHTML=`<h1>🎡 ${n}</h1>`;
+ say("आपको "+n+" वर्चुअल पॉइंट मिले!");
+}
+
+// 6. Car Racing
+games.car=()=>{
+ state.lane=1;state.turn=0;
+ show("🏎️ कार रेसिंग","<h1 id='car'>🏎️</h1><p>बाधाओं से बचकर रास्ता पार करो।</p>",
+ [0,1,2].map(x=>btn("लेन "+(x+1),`carMove(${x})`)).join(""));
+};
+function carMove(x){
+ let danger=Math.floor(Math.random()*3);
+ if(x===danger){say("बाधा आ गई! रेस खत्म।");return;}
+ state.turn++;addPoints(2);
+ say("अच्छा! रेस के कदम: "+state.turn+" (+2)");
+}
+
+// 7. Bike Racing
+games.bike=()=>{
+ state.n=0;
+ show("🏍️ बाइक रेसिंग","<h1>🏍️</h1><p>सही समय पर आगे बढ़ो।</p>",
+ btn("आगे बढ़ो","bikeMove()"));
+};
+function bikeMove(){
+ if(Math.random()<.2){say("रेस खत्म! कुल दूरी: "+state.n);return;}
+ state.n+=10;addPoints(2);
+ $("playArea").innerHTML=`<h1>🏍️</h1><h2>${state.n} मीटर</h2>`;
+ say("+2 पॉइंट!");
+}
+
+// 8. Flappy Flight
+games.flappy=()=>{
+ state.n=0;
+ show("🐦 Flappy Flight","<h1 id='bird'>🐦</h1><p>उड़ने के लिए टैप करो।</p>",
+ btn("उड़ो","flap()"));
+};
+function flap(){
+ if(Math.random()<.15){say("राउंड खत्म! स्कोर: "+state.n);return;}
+ state.n++;addPoints(1);
+ $("playArea").innerHTML=`<h1>🐦 ⬆️</h1><h2>स्कोर ${state.n}</h2>`;
+ say("+1 पॉइंट! उड़ते रहो।");
+}
+
+// 9. Subway Runner
+games.subway=()=>{
+ state.n=0;
+ show("🚇 Subway Runner","<h1>🏃</h1><p>रास्ते में बाधा से बचो।</p>",
+ btn("दौड़ो","subwayRun()"));
+};
+function subwayRun(){
+ if(Math.random()<.2){say("दौड़ खत्म! दूरी: "+state.n);return;}
+ state.n++;addPoints(2);
+ $("playArea").innerHTML=`<h1>🏃‍♂️</h1><h2>दूरी: ${state.n}</h2>`;
+ say("+2 पॉइंट!");
+}
+
+// 10. Bubble Shooter
+games.bubble=()=>{
+ state.target=Math.floor(Math.random()*3);
+ show("🫧 Bubble Shooter",`<h2>लक्ष्य रंग: ${["🔴","🔵","🟡"][state.target]}</h2><p>सही रंग चुनो।</p>`,
+ ["🔴","🔵","🟡"].map((x,i)=>btn(x,`shootBubble(${i})`)).join(""));
+};
+function shootBubble(i){
+ if(i===state.target){addPoints(4);say("सही निशाना! +4 पॉइंट");}
+ else say("गलत रंग! फिर कोशिश करो।");
+}
+
+// 11. Fruit Ninja
+games.fruit=()=>{
+ state.fruit=["🍉","🍎","🍊","🍍"][Math.floor(Math.random()*4)];
+ show("🍉 Fruit Ninja",`<h1>${state.fruit}</h1><p>फल पर टैप करो!</p>`,
+ btn("फल काटो","cutFruit()"));
+};
+function cutFruit(){
+ addPoints(2);say("शानदार! +2 पॉइंट");
+ games.fruit();
+}
+
+// 12. Memory Cards
+games.memory=()=>{
+ state.cards=["🐯","🐯","🐸","🐸","🐵","🐵","🦁","🦁"].sort(()=>Math.random()-.5);
+ state.open=[];state.done=[];
+ memoryDraw();
+};
+function memoryDraw(){
+ show("🧠 Memory Cards",
+ `<p>एक जैसे जोड़े ढूँढो।</p><div>${state.cards.map((c,i)=>
+ `<button class="cell" onclick="flipCard(${i})">${state.done.includes(i)||state.open.includes(i)?c:"❔"}</button>`
+ ).join("")}</div>`);
+}
+function flipCard(i){
+ if(state.done.includes(i)||state.open.includes(i)||state.open.length===2)return;
+ state.open.push(i);memoryDraw();
+ if(state.open.length===2){
+  if(state.cards[state.open[0]]===state.cards[state.open[1]]){
+   state.done.push(...state.open);state.open=[];addPoints(5);
+   say("जोड़ा मिल गया! +5 पॉइंट");
+  }else{
+   let pair=[...state.open];say("फिर कोशिश करो!");
+   setTimeout(()=>{state.open=[];memoryDraw();},800);
+  }
+  memoryDraw();
+ }
+ if(state.done.length===8)say("बहुत बढ़िया! सभी जोड़े मिल गए!");
+}
+
+// 13. Cricket Star
+games.cricket=()=>{
+ state.target=Math.floor(Math.random()*3);
+ show("🏏 Cricket Star","<h2>गेंद किस तरफ आएगी?</h2>",
+ ["बायाँ","बीच","दायाँ"].map((x,i)=>btn(x,`hitBall(${i})`)).join(""));
+};
+function hitBall(i){
+ if(i===state.target){addPoints(6);say("छक्का! +6 पॉइंट");}
+ else say("बॉल मिस हो गई!");
+ state.target=Math.floor(Math.random()*3);
+}
+
+// 14. Football Shoot
+games.football=()=>{
+ state.target=Math.floor(Math.random()*3);
+ show("⚽ Football Shoot","<h2>गोलपोस्ट चुनो</h2>",
+ ["बायाँ","बीच","दायाँ"].map((x,i)=>btn(x,`shootGoal(${i})`)).join(""));
+};
+function shootGoal(i){
+ if(i===state.target){addPoints(5);say("गोल! +5 पॉइंट");}
+ else say("गोलकीपर ने रोक लिया!");
+ state.target=Math.floor(Math.random()*3);
+}
+
+// 15. Treasure Hunt
+games.treasure=()=>{
+ state.treasure=Math.floor(Math.random()*9);
+ state.tries=0;
+ treasureDraw();
+};
+function treasureDraw(){
+ show("💎 Treasure Hunt","<p>9 खानों में छिपा खजाना ढूँढो।</p><div>"+
+ Array.from({length:9},(_,i)=>`<button class="cell" onclick="findTreasure(${i})">${state.found===i?"💎":state.checked?.includes(i)?"❌":"📦"}</button>`).join("")+"</div>");
+}
+function findTreasure(i){
+ if(state.checked?.includes(i)||state.found!==undefined)return;
+ state.checked=state.checked||[];state.checked.push(i);state.tries++;
+ if(i===state.treasure){
+  state.found=i;addPoints(10);say("खजाना मिल गया! +10 पॉइंट");
+ }else say("यहाँ नहीं है, दूसरा खाना देखो।");
+ treasureDraw();
+ if(state.found!==undefined)say("खजाना मिल गया! +10 पॉइंट");
+ else if(state.tries===8)say("राउंड खत्म। फिर कोशिश करो।");
+}
+render();
+</script>
+</body>
+</html>
