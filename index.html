@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahadev Arcade</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100d18;color:#fff;font-family:Arial;text-align:center}
+header{padding:25px;background:#21152c;border-bottom:2px solid gold}
+h1{color:gold;margin:5px}
+main{padding:20px}
+.card{background:#251d30;border:1px solid #8c6b28;border-radius:15px;padding:20px;margin:18px auto;max-width:420px}
+button{background:gold;color:#201528;border:0;border-radius:10px;padding:13px 22px;font-size:17px;font-weight:bold}
+#target{font-size:55px;cursor:pointer;margin:15px}
+.small{color:#c9bfd4;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1>ॐ महादेव Arcade</h1>
+<p>Free Mini Games</p>
+</header>
+<main>
+<div class="card">
+<h2>आपके कॉइन</h2>
+<h1 id="coins">0</h1>
+<p class="small">ये केवल गेम के वर्चुअल कॉइन हैं। इनका कोई नकद मूल्य नहीं है।</p>
+</div>
+<div class="card">
+<h2>टारगेट टैप गेम</h2>
+<p>नीचे वाले निशान पर टैप करके पॉइंट कमाएँ।</p>
+<div id="target" onclick="tapTarget()">🎯</div>
+<h3>स्कोर: <span id="score">0</span></h3>
+<button onclick="startGame()">गेम शुरू करें</button>
+<p id="message">शुरू करने के लिए बटन दबाएँ।</p>
+</div>
+<div class="card">
+<h2>जल्दी खेलें</h2>
+<p>यह एक मुफ्त डेमो गेम है।</p>
+<button onclick="showInfo()">गेम जानकारी</button>
+<p id="info"></p>
+</div>
+</main>
+<script>
+let coins=0,score=0,playing=false;
+function startGame(){
+ score=0;
+ playing=true;
+ document.getElementById("score").textContent=score;
+ document.getElementById("message").textContent="अब निशान पर टैप करें!";
+}
+function tapTarget(){
+ if(!playing){
+ document.getElementById("message").textContent="पहले गेम शुरू करें।";
+ return;
+ }
+ score++;
+ coins++;
+ document.getElementById("score").textContent=score;
+ document.getElementById("coins").textContent=coins;
+}
+function showInfo(){
+ document.getElementById("info").textContent=
+ "यह मुफ्त मनोरंजन वाला डेमो है। कॉइन केवल गेम में उपयोग होते हैं।";
+}
+</script>
+</body>
+</html>
