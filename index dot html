@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahadev Arcade - Gaming Platform</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #080d18;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: linear-gradient(120deg,#111c32,#182b49,#101827);
+  padding: 25px 15px;
+  text-align: center;
+  border-bottom: 1px solid #34445d;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #f7c75b;
+  text-shadow: 0 0 18px #b47d24;
+}
+
+header p {
+  color: #aab7cc;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.coins {
+  background: #19263b;
+  border: 1px solid #d8a93d;
+  color: #ffd76b;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+.section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 10px 15px 30px;
+}
+
+.section h2 {
+  font-size: 22px;
+  margin: 15px 0 20px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+}
+
+.game-card {
+  background: linear-gradient(145deg,#17243a,#0e1728);
+  border: 1px solid #293c58;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: .25s;
+  box-shadow: 0 8px 25px #0008;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  border-color: #e5b64c;
+  box-shadow: 0 10px 30px #d69c2730;
+}
+
+.game-art {
+  height: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+  background:
+    radial-gradient(circle at 50% 40%,#ffffff20,transparent 55%),
+    linear-gradient(135deg,var(--c1),var(--c2));
+}
+
+.game-info {
+  padding: 14px;
+}
+
+.game-info h3 {
+  font-size: 16px;
+  margin-bottom: 7px;
+}
+
+.game-info p {
+  font-size: 12px;
+  color: #9eacc0;
+  min-height: 30px;
+  line-height: 1.5;
+}
+
+.play-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#d69c32,#f5d276);
+  color: #17120a;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.play-btn:hover {
+  filter: brightness(1.15);
+}
+
+footer {
+  text-align: center;
+  padding: 25px 10px;
+  color: #77869d;
+  font-size: 12px;
+  border-top: 1px solid #26344a;
+}
+
+@media(max-width:700px) {
+  .game-grid {
+    grid-template-columns: repeat(2,1fr);
+    gap: 12px;
+  }
+  .game-art {
+    height: 115px;
+    font-size: 52px;
+  }
+  .logo {
+    font-size: 25px;
+  }
+}
+
+@media(max-width:360px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ॐ MAHADEV ARCADE</div>
+  <p>ENTER THE WORLD OF GAMING</p>
+</header>
+
+<div class="topbar">
+  <strong>Welcome Player</strong>
+  <div class="coins">🪙 <span id="coinBalance">1000</span> Coins</div>
+</div>
+
+<main class="section">
+  <h2>🔥 Featured Games</h2>
+
+  <div class="game-grid" id="gameGrid"></div>
+</main>
+
+<footer>
+  © 2026 Mahadev Arcade | All Rights Reserved
+  <p style="margin-top:8px">Virtual coins are for entertainment only. No cash value.</p>
+</footer>
+
+<script>
+const games = [
+  ["Dragon Tiger","♠️","Card strategy challenge","#572b48","#171d39"],
+  ["Sky Flyer","✈️","Flight distance challenge","#174b77","#101b37"],
+  ["Chicken Road","🐔","Skill-based road crossing","#70502c","#222b32"],
+  ["Lucky Dice","🎲","Dice puzzle challenge","#4b347d","#19234b"],
+  ["Spin Wheel","🎡","Free prize wheel","#713c63","#252044"],
+  ["Car Racing","🏎️","3D racing experience","#8b352b","#202438"],
+  ["Bike Racing","🏍️","High-speed racing","#694522","#172a39"],
+  ["Flappy Flight","🕊️","Test your flying skills","#246b78","#182744"],
+  ["Subway Runner","🚆","Endless running challenge","#31517c","#171c37"],
+  ["Bubble Shooter","🔵","Aim and match bubbles","#255f8b","#29204e"],
+  ["Fruit Ninja","🍉","Fast reflex challenge","#8a3836","#27213b"],
+  ["Memory Cards","🃏","Test your memory","#50418c","#182c43"],
+  ["Cricket Star","🏏","Cricket batting challenge","#236447","#142d38"],
+  ["Football Shoot","⚽","Football shooting challenge","#326b48","#172d36"],
+  ["Treasure Hunt","💎","Find hidden treasures","#77521d","#29213b"]
+];
+
+const grid = document.getElementById("gameGrid");
+
+games.forEach((game,index) => {
+  const card = document.createElement("div");
+  card.className = "game-card";
+
+  const art = document.createElement("div");
+  art.className = "game-art";
+  art.style.setProperty("--c1",game[3]);
+  art.style.setProperty("--c2",game[4]);
+  art.textContent = game[1];
+
+  const info = document.createElement("div");
+  info.className = "game-info";
+
+  const heading = document.createElement("h3");
+  heading.textContent = game[0];
+
+  const description = document.createElement("p");
+  description.textContent = game[2];
+
+  const button = document.createElement("button");
+  button.className = "play-btn";
+  button.textContent = "PLAY NOW";
+
+  button.addEventListener("click",() => {
+    alert(game[0] + " game is coming soon!");
+  });
+
+  info.append(heading,description,button);
+  card.append(art,info);
+  grid.appendChild(card);
+});
+</script>
+
+</body>
+</html>
